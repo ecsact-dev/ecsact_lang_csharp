@@ -232,6 +232,8 @@ void ecsact_codegen_plugin
 {
 	ecsact::codegen_plugin_context ctx{package_id, write_fn};
 
+	ctx.write("// GENERATED FILE - DO NOT EDIT\n\n");
+	ctx.write("#nullable enable\n\n");
 	ctx.write("namespace ", ecsact_meta_package_name(package_id), " {\n");
 
 	for(auto comp_id : get_component_ids(package_id)) {
