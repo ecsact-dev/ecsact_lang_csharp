@@ -11,8 +11,8 @@ constexpr auto csharp_type_str
 {
 	switch(type) {
 		case ECSACT_BOOL: return "global::System.Boolean";
-		case ECSACT_I8: return "global::System.Int8";
-		case ECSACT_U8: return "global::System.UInt8";
+		case ECSACT_I8: return "global::System.SByte";
+		case ECSACT_U8: return "global::System.Byte";
 		case ECSACT_I16: return "global::System.Int16";
 		case ECSACT_U16: return "global::System.UInt16";
 		case ECSACT_I32: return "global::System.Int32";
