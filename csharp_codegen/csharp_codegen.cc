@@ -138,6 +138,7 @@ static void write_fields
 
 	ctx.write("\n");
 	ctx.write(indentation, "public override bool Equals(object? obj) {\n");
+	ctx.write(indentation, "\tif(obj == null) return false;\n");
 	ctx.write(indentation, "\tvar other_ = (", full_name, ")obj;\n");
 	ctx.write(indentation, "\treturn true");
 	for(auto field_id : field_ids) {
