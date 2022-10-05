@@ -1,98 +1,9 @@
 #include <vector>
 #include <cassert>
-#include "ecsact/runtime/meta.h"
+#include "ecsact/runtime/meta.hh"
 #include "ecsact/codegen_plugin.h"
 #include "ecsact/codegen_plugin.hh"
 #include "ecsact/lang-support/lang-csharp.hh"
-
-static std::vector<ecsact_component_id> get_component_ids
-	( ecsact_package_id package_id
-	)
-{
-	std::vector<ecsact_component_id> component_ids;
-	component_ids.resize(ecsact_meta_count_components(package_id));
-	ecsact_meta_get_component_ids(
-		package_id,
-		static_cast<int32_t>(component_ids.size()),
-		component_ids.data(),
-		nullptr
-	);
-
-	return component_ids;
-}
-
-static std::vector<ecsact_system_id> get_system_ids
-	( ecsact_package_id package_id
-	)
-{
-	std::vector<ecsact_system_id> system_ids;
-	system_ids.resize(ecsact_meta_count_systems(package_id));
-	ecsact_meta_get_system_ids(
-		package_id,
-		static_cast<int32_t>(system_ids.size()),
-		system_ids.data(),
-		nullptr
-	);
-
-	return system_ids;
-}
-
-template<typename T>
-static std::vector<ecsact_system_id> get_child_system_ids
-	( T id
-	)
-{
-	ecsact_system_like_id system_id = ecsact_id_cast<ecsact_system_like_id>(id);
-	std::vector<ecsact_system_id> child_system_ids;
-	child_system_ids.resize(ecsact_meta_count_child_systems(system_id));
-	ecsact_meta_get_child_system_ids(
-		system_id,
-		static_cast<int32_t>(child_system_ids.size()),
-		child_system_ids.data(),
-		nullptr
-	);
-
-	return child_system_ids;
-}
-
-static std::vector<ecsact_action_id> get_action_ids
-	( ecsact_package_id package_id
-	)
-{
-	std::vector<ecsact_action_id> action_ids;
-	action_ids.resize(ecsact_meta_count_actions(package_id));
-	ecsact_meta_get_action_ids(
-		package_id,
-		static_cast<int32_t>(action_ids.size()),
-		action_ids.data(),
-		nullptr
-	);
-
-	return action_ids;
-}
-
-template<typename T>
-static std::vector<ecsact_field_id> get_field_ids
-	( T id
-	)
-{
-	ecsact_composite_id compo_id;
-	if constexpr(std::is_same_v<ecsact_composite_id, T>) {
-		compo_id = id;
-	} else {
-		compo_id = ecsact_id_cast<ecsact_composite_id>(id);
-	}
-	std::vector<ecsact_field_id> field_ids;
-	field_ids.resize(ecsact_meta_count_fields(compo_id));
-	ecsact_meta_get_field_ids(
-		compo_id,
-		static_cast<int32_t>(field_ids.size()),
-		field_ids.data(),
-		nullptr
-	);
-
-	return field_ids;
-}
 
 static bool has_parent_system(ecsact_system_id id) {
 	auto parent_id = ecsact_meta_get_parent_system_id(id);
@@ -105,6 +16,7 @@ static void write_fields
 	, std::string_view                 indentation
 	)
 {
+	using ecsact::meta::get_field_ids;
 	using ecsact::csharp_lang_support::csharp_field_attribute_str;
 	using ecsact::csharp_lang_support::csharp_type_str;
 	using namespace std::string_literals;
@@ -204,6 +116,7 @@ static void write_system_struct
 	, std::string                      indentation
 	)
 {
+	using ecsact::meta::get_child_system_ids;
 	using namespace std::string_literals;
 
 	std::string sys_name = ecsact_meta_system_name(sys_id);
@@ -231,6 +144,12 @@ void ecsact_codegen_plugin
   , ecsact_codegen_write_fn_t  write_fn
   )
 {
+	using ecsact::meta::get_component_ids;
+	using ecsact::meta::get_transient_ids;
+	using ecsact::meta::get_action_ids;
+	using ecsact::meta::get_system_ids;
+	using ecsact::meta::get_child_system_ids;
+
 	ecsact::codegen_plugin_context ctx{package_id, write_fn};
 
 	ctx.write("// GENERATED FILE - DO NOT EDIT\n\n");
@@ -242,6 +161,15 @@ void ecsact_codegen_plugin
 		auto comp_name = ecsact_meta_component_name(comp_id);
 		ctx.write("\npublic struct ", comp_name, " : global::Ecsact.Component {\n");
 		write_id_property(ctx, comp_id, "\t");
+		write_fields(ctx, compo_id, "\t");
+		ctx.write("}\n");
+	}
+
+	for(auto trans_id : get_transient_ids(package_id)) {
+		auto compo_id = ecsact_id_cast<ecsact_composite_id>(trans_id);
+		auto comp_name = ecsact_meta_transient_name(trans_id);
+		ctx.write("\npublic struct ", comp_name, " : global::Ecsact.Transient {\n");
+		write_id_property(ctx, trans_id, "\t");
 		write_fields(ctx, compo_id, "\t");
 		ctx.write("}\n");
 	}
