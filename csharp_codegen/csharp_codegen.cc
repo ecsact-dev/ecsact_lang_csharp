@@ -29,18 +29,21 @@ static void write_fields
 	for(auto field_id : field_ids) {
 		auto field_type = ecsact_meta_field_type(compo_id, field_id);
 		auto field_name = ecsact_meta_field_name(compo_id, field_id);
-		assert(field_type.kind == ECSACT_TYPE_KIND_BUILTIN);
 		auto attr_str = csharp_field_attribute_str(field_type);
 		if(!attr_str.empty()) {
 			ctx.write(indentation, attr_str, "\n");
 		}
-		ctx.write(
-			indentation,
-			"public ",
-			csharp_type_str(field_type.type.builtin),
-			" "s,
-			field_name
-		);
+
+		ctx.write(indentation, "public ");
+		switch(field_type.kind) {
+			case ECSACT_TYPE_KIND_BUILTIN:
+				ctx.write(csharp_type_str(field_type.type.builtin));
+				break;
+			case ECSACT_TYPE_KIND_ENUM:
+				ctx.write(ecsact_meta_enum_name(field_type.type.enum_id));
+				break;
+		}
+		ctx.write(" "s, field_name);
 
 		if(field_type.length > 1) {
 			ctx.write("[]");
@@ -146,6 +149,8 @@ void ecsact_codegen_plugin
 {
 	using ecsact::meta::get_component_ids;
 	using ecsact::meta::get_transient_ids;
+	using ecsact::meta::get_enum_ids;
+	using ecsact::meta::get_enum_values;
 	using ecsact::meta::get_action_ids;
 	using ecsact::meta::get_system_ids;
 	using ecsact::meta::get_child_system_ids;
@@ -155,6 +160,17 @@ void ecsact_codegen_plugin
 	ctx.write("// GENERATED FILE - DO NOT EDIT\n\n");
 	ctx.write("#nullable enable\n\n");
 	ctx.write("namespace ", ecsact_meta_package_name(package_id), " {\n");
+
+	for(auto enum_id : get_enum_ids(ctx.package_id)) {
+
+		ctx.write("\npublic enum ", ecsact_meta_enum_name(enum_id), " {\n");
+
+		for(auto& enum_value : get_enum_values(enum_id)) {
+			ctx.write("\t", enum_value.name, " = ", enum_value.value, ",\n");
+		}
+		
+		ctx.write("}\n");
+	}
 
 	for(auto comp_id : get_component_ids(package_id)) {
 		auto compo_id = ecsact_id_cast<ecsact_composite_id>(comp_id);
