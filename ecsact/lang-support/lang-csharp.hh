@@ -5,27 +5,30 @@
 
 namespace ecsact::csharp_lang_support {
 
-constexpr auto csharp_type_str
-	( ecsact_builtin_type type
-	)
-{
+constexpr auto csharp_type_str(ecsact_builtin_type type) {
 	switch(type) {
-		case ECSACT_BOOL: return "global::System.Boolean";
-		case ECSACT_I8: return "global::System.SByte";
-		case ECSACT_U8: return "global::System.Byte";
-		case ECSACT_I16: return "global::System.Int16";
-		case ECSACT_U16: return "global::System.UInt16";
-		case ECSACT_I32: return "global::System.Int32";
-		case ECSACT_U32: return "global::System.UInt32";
-		case ECSACT_F32: return "global::System.Single";
-		case ECSACT_ENTITY_TYPE: return "global::System.Int32";
+		case ECSACT_BOOL:
+			return "global::System.Boolean";
+		case ECSACT_I8:
+			return "global::System.SByte";
+		case ECSACT_U8:
+			return "global::System.Byte";
+		case ECSACT_I16:
+			return "global::System.Int16";
+		case ECSACT_U16:
+			return "global::System.UInt16";
+		case ECSACT_I32:
+			return "global::System.Int32";
+		case ECSACT_U32:
+			return "global::System.UInt32";
+		case ECSACT_F32:
+			return "global::System.Single";
+		case ECSACT_ENTITY_TYPE:
+			return "global::System.Int32";
 	}
 }
 
-inline std::string csharp_field_attribute_str
-	( ecsact_field_type field_type
-	)
-{
+inline std::string csharp_field_attribute_str(ecsact_field_type field_type) {
 	using namespace std::string_literals;
 
 	auto introp_services = "global::System.Runtime.InteropServices"s;
