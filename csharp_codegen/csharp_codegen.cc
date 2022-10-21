@@ -10,21 +10,19 @@ static bool has_parent_system(ecsact_system_id id) {
 	return parent_id != (ecsact_system_like_id)-1;
 }
 
-static void write_fields
-	( ecsact::codegen_plugin_context&  ctx
-	, ecsact_composite_id              compo_id
-	, std::string_view                 indentation
-	)
-{
-	using ecsact::meta::get_field_ids;
+static void write_fields(
+	ecsact::codegen_plugin_context& ctx,
+	ecsact_composite_id             compo_id,
+	std::string_view                indentation
+) {
 	using ecsact::csharp_lang_support::csharp_field_attribute_str;
 	using ecsact::csharp_lang_support::csharp_type_str;
+	using ecsact::meta::get_field_ids;
 	using namespace std::string_literals;
 
 	auto field_ids = get_field_ids(compo_id);
-	auto full_name = ecsact_meta_decl_full_name(
-		ecsact_id_cast<ecsact_decl_id>(compo_id)
-	);
+	auto full_name =
+		ecsact_meta_decl_full_name(ecsact_id_cast<ecsact_decl_id>(compo_id));
 
 	for(auto field_id : field_ids) {
 		auto field_type = ecsact_meta_field_type(compo_id, field_id);
@@ -61,11 +59,20 @@ static void write_fields
 		auto field_name = ecsact_meta_field_name(compo_id, field_id);
 
 		if(field_type.length > 1) {
-			for(int index=0; field_type.length > index; ++index) {
+			for(int index = 0; field_type.length > index; ++index) {
 				ctx.write("\n", indentation, "\t\t");
 				ctx.write(
-					"&& other_.", field_name, "[", index, "].Equals(",
-					"this.", field_name, "[", index, "]", ")"
+					"&& other_.",
+					field_name,
+					"[",
+					index,
+					"].Equals(",
+					"this.",
+					field_name,
+					"[",
+					index,
+					"]",
+					")"
 				);
 			}
 		} else {
@@ -76,7 +83,6 @@ static void write_fields
 	ctx.write(";\n");
 	ctx.write(indentation, "}\n");
 
-
 	ctx.write("\n");
 	ctx.write(indentation, "public override int GetHashCode() {\n");
 	ctx.write(indentation, "\tint hashCode_ = 17;\n");
@@ -85,7 +91,7 @@ static void write_fields
 		auto field_name = ecsact_meta_field_name(compo_id, field_id);
 
 		if(field_type.length > 1) {
-			for(int index=0; field_type.length > index; ++index) {
+			for(int index = 0; field_type.length > index; ++index) {
 				ctx.write(indentation, "\thashCode_ = hashCode_ * 23 + ");
 				ctx.write(field_name, "[", index, "].GetHashCode();\n");
 			}
@@ -99,12 +105,11 @@ static void write_fields
 }
 
 template<typename T>
-static void write_id_property
-	( ecsact::codegen_plugin_context&  ctx
-	, T                                id
-	, std::string_view                 indentation
-	)
-{
+static void write_id_property(
+	ecsact::codegen_plugin_context& ctx,
+	T                               id,
+	std::string_view                indentation
+) {
 	ctx.write(
 		indentation,
 		"public static readonly global::System.Int32 id = ",
@@ -113,12 +118,11 @@ static void write_id_property
 	);
 }
 
-static void write_system_struct
-	( ecsact::codegen_plugin_context&  ctx
-	, ecsact_system_id                 sys_id
-	, std::string                      indentation
-	)
-{
+static void write_system_struct(
+	ecsact::codegen_plugin_context& ctx,
+	ecsact_system_id                sys_id,
+	std::string                     indentation
+) {
 	using ecsact::meta::get_child_system_ids;
 	using namespace std::string_literals;
 
@@ -142,18 +146,17 @@ const char* ecsact_codegen_plugin_name() {
 	return "cs";
 }
 
-void ecsact_codegen_plugin
-  ( ecsact_package_id          package_id
-  , ecsact_codegen_write_fn_t  write_fn
-  )
-{
+void ecsact_codegen_plugin(
+	ecsact_package_id         package_id,
+	ecsact_codegen_write_fn_t write_fn
+) {
+	using ecsact::meta::get_action_ids;
+	using ecsact::meta::get_child_system_ids;
 	using ecsact::meta::get_component_ids;
-	using ecsact::meta::get_transient_ids;
 	using ecsact::meta::get_enum_ids;
 	using ecsact::meta::get_enum_values;
-	using ecsact::meta::get_action_ids;
 	using ecsact::meta::get_system_ids;
-	using ecsact::meta::get_child_system_ids;
+	using ecsact::meta::get_transient_ids;
 
 	ecsact::codegen_plugin_context ctx{package_id, write_fn};
 
@@ -162,13 +165,12 @@ void ecsact_codegen_plugin
 	ctx.write("namespace ", ecsact_meta_package_name(package_id), " {\n");
 
 	for(auto enum_id : get_enum_ids(ctx.package_id)) {
-
 		ctx.write("\npublic enum ", ecsact_meta_enum_name(enum_id), " {\n");
 
 		for(auto& enum_value : get_enum_values(enum_id)) {
 			ctx.write("\t", enum_value.name, " = ", enum_value.value, ",\n");
 		}
-		
+
 		ctx.write("}\n");
 	}
 
