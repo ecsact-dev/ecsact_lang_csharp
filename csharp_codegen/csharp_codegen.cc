@@ -142,10 +142,6 @@ static void write_system_struct(
 	}
 }
 
-const char* ecsact_codegen_plugin_name() {
-	return "cs";
-}
-
 void ecsact_codegen_plugin(
 	ecsact_package_id         package_id,
 	ecsact_codegen_write_fn_t write_fn
