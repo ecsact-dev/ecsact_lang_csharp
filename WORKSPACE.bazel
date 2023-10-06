@@ -22,9 +22,9 @@ boost_http_archives()
 
 http_archive(
     name = "com_google_googletest",
-    sha256 = "41c14a5a4887125fe329235f00c5f92660f245b91bb8dde7c59f9a2540fdec28",
-    strip_prefix = "googletest-40412d85124f7c6f3d88454583c4633e5e10fc8c",
-    url = "https://github.com/google/googletest/archive/40412d85124f7c6f3d88454583c4633e5e10fc8c.zip",
+    sha256 = "ba96972e0aa8a1428596570ac573958c1c879483bd148a2b72994453f9dfa7c2",
+    strip_prefix = "googletest-2dd1c131950043a8ad5ab0d2dda0e0970596586a",
+    url = "https://github.com/google/googletest/archive/2dd1c131950043a8ad5ab0d2dda0e0970596586a.zip",
 )
 
 http_archive(
