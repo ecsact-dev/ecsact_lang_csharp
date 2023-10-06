@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 0.1.2 - 2023-10-06
+#### Bug Fixes
+- add missing bazel_skylib dep - (a90c386) - Ezekiel Warren
+
+- - -
+
 ## 0.1.1 - 2023-10-06
 #### Features
 - bzlmodify (#68) - (7a47b77) - Ezekiel Warren
