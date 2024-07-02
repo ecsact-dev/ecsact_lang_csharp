@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 0.1.4 - 2024-07-02
+#### Miscellaneous Chores
+- update codegen plugin interface (#140) - (ae4ba2c) - Ezekiel Warren
+- sync with ecsact_common (#139) - (2c0a565) - seaubot
+- sync with ecsact_common (#138) - (de320ab) - seaubot
+- sync with ecsact_common (#59) - (353d7b3) - seaubot
+
+- - -
+
 ## 0.1.3 - 2024-06-20
 #### Miscellaneous Chores
 - **(deps)** update dependency ecsact_runtime to v0.6.6 (#108) - (3e99c9f) - renovate[bot]
