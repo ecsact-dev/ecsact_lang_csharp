@@ -143,8 +143,9 @@ static void write_system_struct(
 }
 
 void ecsact_codegen_plugin(
-	ecsact_package_id         package_id,
-	ecsact_codegen_write_fn_t write_fn
+	ecsact_package_id          package_id,
+	ecsact_codegen_write_fn_t  write_fn,
+	ecsact_codegen_report_fn_t report_fn
 ) {
 	using ecsact::meta::get_action_ids;
 	using ecsact::meta::get_child_system_ids;
@@ -154,7 +155,7 @@ void ecsact_codegen_plugin(
 	using ecsact::meta::get_system_ids;
 	using ecsact::meta::get_transient_ids;
 
-	ecsact::codegen_plugin_context ctx{package_id, write_fn};
+	ecsact::codegen_plugin_context ctx{package_id, write_fn, report_fn};
 
 	ctx.write("// GENERATED FILE - DO NOT EDIT\n\n");
 	ctx.write("#nullable enable\n\n");
