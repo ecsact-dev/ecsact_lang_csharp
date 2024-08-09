@@ -155,7 +155,7 @@ void ecsact_codegen_plugin(
 	using ecsact::meta::get_system_ids;
 	using ecsact::meta::get_transient_ids;
 
-	ecsact::codegen_plugin_context ctx{package_id, write_fn, report_fn};
+	ecsact::codegen_plugin_context ctx{package_id, 0, write_fn, report_fn};
 
 	ctx.write("// GENERATED FILE - DO NOT EDIT\n\n");
 	ctx.write("#nullable enable\n\n");
