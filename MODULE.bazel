@@ -1,6 +1,6 @@
 module(
     name = "ecsact_lang_csharp",
-    version = "0.1.6",
+    version = "0.1.7",
     compatibility_level = 1,
 )
 
