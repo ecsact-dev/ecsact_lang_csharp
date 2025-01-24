@@ -4,16 +4,16 @@ module(
     compatibility_level = 1,
 )
 
-bazel_dep(name = "ecsact_runtime", version = "0.7.1", max_compatibility_level = 8)
-bazel_dep(name = "ecsact_codegen", version = "0.4.3")
+bazel_dep(name = "ecsact_runtime", version = "0.8.0", max_compatibility_level = 8)
+bazel_dep(name = "ecsact_codegen", version = "0.4.4")
 bazel_dep(name = "rules_cc", version = "0.0.9")
-bazel_dep(name = "ecsact_lang_cpp", version = "0.4.10")
+bazel_dep(name = "ecsact_lang_cpp", version = "0.4.11")
 bazel_dep(name = "bazel_skylib", version = "1.7.1")
 
 bazel_dep(name = "toolchains_llvm", version = "1.0.0", dev_dependency = True)
 bazel_dep(name = "hedron_compile_commands", dev_dependency = True)
 
-bazel_dep(name = "ecsact_cli", version = "0.3.22")
+bazel_dep(name = "ecsact_cli", version = "0.3.23")
 
 git_override(
     module_name = "hedron_compile_commands",
